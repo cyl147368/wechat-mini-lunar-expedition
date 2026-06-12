@@ -1,23 +1,26 @@
 # WeChat Mini Lunar Expedition QA Report
 
-Generated: 2026-06-12T15:17:11.056Z
+Generated: 2026-06-12T22:59:28.531Z
 
 ## Deliverables
 
 - Release project: `/Users/chenyulin/Documents/Codex/2026-06-11/hi-2/outputs/wechat-mini-lunar-expedition-release`
-- Release zip: `/Users/chenyulin/Documents/Codex/2026-06-11/hi-2/outputs/wechat-mini-lunar-expedition-release.zip` (13.9 KB)
-- Full project zip: `/Users/chenyulin/Documents/Codex/2026-06-11/hi-2/outputs/wechat-mini-lunar-expedition.zip` (26.2 KB)
+- Release zip: `/Users/chenyulin/Documents/Codex/2026-06-11/hi-2/outputs/wechat-mini-lunar-expedition-release.zip` (17.0 KB)
+- Full project zip: `/Users/chenyulin/Documents/Codex/2026-06-11/hi-2/outputs/wechat-mini-lunar-expedition.zip` (30.9 KB)
 
 ## Checksums
 
-- `wechat-mini-lunar-expedition-release.zip`: `8c044ec72836daf08791c090a8faef1b6c038d2fb9f3f6c74e66bb453262f482`
-- `wechat-mini-lunar-expedition.zip`: `bdd4db04fba42cfa47e5b25a351f26c9349fab037b24b9e814a4ed301e41642e`
+- `wechat-mini-lunar-expedition-release.zip`: `f0e66ec1aec571281f990e1de607a7bb589deff72907b152d4df320ed1918335`
+- `wechat-mini-lunar-expedition.zip`: `98f2b836d2e14a03c026a7991ded2e93c5b22ebd6d1a526ec0dd109fef61d679`
 
 ## Release File List
 
 - `app.json`
+- `cloudfunctions/playerState/index.js`
+- `cloudfunctions/playerState/package.json`
 - `game.js`
 - `game.json`
+- `js/cloud-state.js`
 - `js/logic.js`
 - `pages/index/index.js`
 - `pages/index/index.json`

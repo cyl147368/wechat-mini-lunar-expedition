@@ -1,7 +1,9 @@
 "use strict";
 
 var Logic = require("./js/logic");
+var CloudState = require("./js/cloud-state");
 
+var GAME_ID = "wechat-mini-lunar-expedition";
 var STORAGE_KEY = "wechat-mini-lunar-expedition-state-v1";
 var PI2 = Math.PI * 2;
 
@@ -373,9 +375,9 @@ function extractTouch(event) {
   return { x: x, y: y };
 }
 
-function saveState(wxApi, state) {
-  if (!wxApi || !wxApi.setStorageSync) return;
-  safe(function () { wxApi.setStorageSync(STORAGE_KEY, state); }, null);
+function saveState(wxApi, state, cloudSync) {
+  if (wxApi && wxApi.setStorageSync) safe(function () { wxApi.setStorageSync(STORAGE_KEY, state); }, null);
+  if (cloudSync && typeof cloudSync.save === "function") cloudSync.save(state);
 }
 
 function loadState(wxApi) {
@@ -396,8 +398,15 @@ function createRuntime(options) {
     ctx: ctx,
     state: options.state ? Logic.sanitizeState(options.state) : loadState(wxApi),
     layout: computeLayout(system.width, system.height),
-    mode: "move"
+    mode: "move",
+    cloudSync: null
   };
+  runtime.cloudSync = CloudState.create({
+    wx: wxApi,
+    gameId: GAME_ID,
+    storageKey: STORAGE_KEY,
+    sanitize: Logic.sanitizeState
+  });
 
   function resize() {
     system = getSystemInfo(wxApi);
@@ -418,9 +427,16 @@ function createRuntime(options) {
     if (runtime.ctx) render(runtime.ctx, runtime.state, runtime.layout, runtime.mode);
   }
 
+  function applyRemoteState(remoteState) {
+    if (!remoteState) return;
+    runtime.state = Logic.sanitizeState(remoteState);
+    saveState(wxApi, runtime.state, null);
+    redraw();
+  }
+
   function commit(nextState) {
     runtime.state = Logic.sanitizeState(nextState);
-    saveState(wxApi, runtime.state);
+    saveState(wxApi, runtime.state, runtime.cloudSync);
     redraw();
   }
 
@@ -464,14 +480,25 @@ function createRuntime(options) {
   function bind() {
     if (wxApi && wxApi.onTouchEnd) wxApi.onTouchEnd(onTouchEnd);
     else if (canvas && canvas.addEventListener) canvas.addEventListener("pointerup", onTouchEnd);
-    if (wxApi && wxApi.onHide) wxApi.onHide(function () { saveState(wxApi, runtime.state); });
-    if (wxApi && wxApi.onShow) wxApi.onShow(function () { runtime.state = loadState(wxApi); redraw(); });
+    if (wxApi && wxApi.onHide) wxApi.onHide(function () { saveState(wxApi, runtime.state, runtime.cloudSync); });
+    if (wxApi && wxApi.onShow) wxApi.onShow(function () {
+      if (runtime.cloudSync && runtime.cloudSync.load(function (remoteState) {
+        if (remoteState) applyRemoteState(remoteState);
+        else {
+          runtime.state = loadState(wxApi);
+          redraw();
+        }
+      })) return;
+      runtime.state = loadState(wxApi);
+      redraw();
+    });
     if (wxApi && wxApi.onWindowResize) wxApi.onWindowResize(function () { resize(); redraw(); });
   }
 
   resize();
   bind();
   redraw();
+  if (runtime.cloudSync) runtime.cloudSync.start(applyRemoteState);
   runtime.tap = tap;
   runtime.redraw = redraw;
   return runtime;
