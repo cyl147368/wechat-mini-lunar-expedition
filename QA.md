@@ -1,6 +1,6 @@
 # WeChat Mini Lunar Expedition QA Report
 
-Generated: 2026-06-13T03:05:10.357Z
+Generated: 2026-06-13T06:52:06.596Z
 
 ## Deliverables
 
@@ -10,7 +10,7 @@ Generated: 2026-06-13T03:05:10.357Z
 
 ## Checksums
 
-- `wechat-mini-lunar-expedition-release.zip`: `2a0ed5c99f87c282404f3fb72683561782cb7682006aa99f5976c90867a2469c`
+- `wechat-mini-lunar-expedition-release.zip`: `14ea8772142d5a56b7230eaa2755cf8891f6c0d92058fd01e0aaa1f1ae7b1ec0`
 - `wechat-mini-lunar-expedition.zip`: `179e9c26d9e207f964bfae8e3b39130b4f8ac573a690057dae3db731d0dd0a48`
 
 ## Release File List
